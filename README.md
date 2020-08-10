@@ -1,68 +1,31 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Installation in structions
+1) Clone or download the repo
+2) run "npm install" in your terminal to install the dependancies
+3) start the app with "yarn start" 
+4) app will run on localhost:3000
 
-## Available Scripts
+Adding new color spaces
+This is quite a simple task, there are two files you will need to update. 
+1) src/config.js 
+- add the new color type to the array of COLOR_TYPES. The "kind" value will need to match the "kind" key value returned by the API. The "conversionFunction" value will need to match the name of the conversion function in src/helpers/colorConversions.js colorConversions object.
+2) src/helpers/colorConversions.js
+- add the conversion function to the colorConversions object. 
 
-In the project directory, you can run:
+If there is a new API endpoint the LIST_URL in src/config.js will also need to be updated.
 
-### `yarn start`
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Heres a quick overview of the approach I took.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+Stage 1
+Some quick research around the conversion calculation from HSL to RGB. CSS-Tricks.com (https://css-tricks.com/converting-color-spaces-in-javascript/) has an excellent overview of may types of color conversions. I did copy and paste the HSLToRGB fuction. Next was to use create-react-app to initalise a basic react app. 
+Then created the Header, Button and ColorTypeConverter components. The helper functions object, the useForm and useColorConversion hooks. 
 
-### `yarn test`
+Stage 2
+The first steps for this was to intergrate the API using a new hook (useAxios). I decided to use third party library axios over fetch as fetch is unsupported by IE. I then created ColorList and ColorBlock to represent theis data in the UI. 
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Stage 3
+Thinking about extending this for the new color type and thinking about all the new possible color types that exist (HEX, CKMY etc.) it made sence to create a config file to which things can be easily added to with out the need to refactor any of the components. It was at this stage I also added a loading spinner animation if the request was being made.
 
-### `yarn build`
-
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+Stage 4
+I feel that using a config file makes it easy to extend the system for new color types. It also allows the useAxios hook to be generic and reuseable for and other request with app may need or could be moved to an external shared library with no problems. I also took the same approach to the useForm hook and the Button, LoadingSpinner and Header components.
+One thing I would do the improve the app for useability would be to added a copyToClipboard fook that would allow the user to click an icon and copy the RGB code.
